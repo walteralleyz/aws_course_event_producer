@@ -1,7 +1,9 @@
 package br.walleyz.aws_course.controller;
 
+import br.walleyz.aws_course.enums.EventType;
 import br.walleyz.aws_course.model.Product;
 import br.walleyz.aws_course.repository.ProductRepository;
+import br.walleyz.aws_course.service.ProductPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +16,13 @@ import java.util.Optional;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private ProductRepository repository;
+    private final ProductRepository repository;
+    private final ProductPublisher publisher;
 
     @Autowired
-    public ProductController(ProductRepository repository) {
+    public ProductController(ProductRepository repository, ProductPublisher publisher) {
         this.repository = repository;
+        this.publisher = publisher;
     }
 
     @GetMapping
@@ -46,6 +50,8 @@ public class ProductController {
     public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
         Product created = repository.save(product);
 
+        publisher.publishEvent(created, EventType.PRODUCT_CREATED);
+
         return ResponseEntity.created(URI.create(String.valueOf(created.getId()))).body(product);
     }
 
@@ -55,6 +61,7 @@ public class ProductController {
             product.setId(id);
 
             Product updated = repository.save(product);
+            publisher.publishEvent(updated, EventType.PRODUCT_UPDATED);
 
             return ResponseEntity.ok(updated);
         }
@@ -70,6 +77,7 @@ public class ProductController {
             Product product = optionalProduct.get();
 
             repository.delete(product);
+            publisher.publishEvent(product, EventType.PRODUCT_DELETED);
 
             return ResponseEntity.ok(product);
         }
