@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.walleyz</groupId>
 	<artifactId>aws_course</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<name>aws_course</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -75,9 +75,9 @@
 				<configuration>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
 					<repository>walteralleyz/aws_course</repository>
-					<tag>1.1.0</tag>
+					<tag>1.2.0</tag>
 					<buildArgs>
-						<JAR_FILE>target/aws_course-1.1.0.jar</JAR_FILE>
+						<JAR_FILE>target/aws_course-1.2.0.jar</JAR_FILE>
 					</buildArgs>
 				</configuration>
 			</plugin>
