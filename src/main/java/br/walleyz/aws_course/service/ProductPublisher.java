@@ -5,6 +5,7 @@ import br.walleyz.aws_course.model.Envelope;
 import br.walleyz.aws_course.model.Product;
 import br.walleyz.aws_course.model.ProductEvent;
 import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sns.model.Topic;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,10 +44,12 @@ public class ProductPublisher {
         try {
             envelope.setData(mapper.writeValueAsString(event));
 
-            snsClient.publish(
+            PublishResult result = snsClient.publish(
                 productEventsTopic.getTopicArn(),
                 mapper.writeValueAsString(envelope)
             );
+
+            LOG.info("Message send with id: {}", result.getMessageId());
 
         } catch (JsonProcessingException e) {
             LOG.error(e.getMessage());
